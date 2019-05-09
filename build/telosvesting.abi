@@ -4,11 +4,29 @@
     "types": [],
     "structs": [
         {
+            "name": "changevest",
+            "base": "",
+            "fields": [
+                {
+                    "name": "to",
+                    "type": "name"
+                },
+                {
+                    "name": "vest_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "new_matures_at_unix_timestamp",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
             "name": "config",
             "base": "",
             "fields": [
                 {
-                    "name": "default_vesting_time",
+                    "name": "default_vesting_period",
                     "type": "microseconds"
                 }
             ]
@@ -28,7 +46,7 @@
             "base": "",
             "fields": [
                 {
-                    "name": "default_vesting_time_microseconds",
+                    "name": "default_vesting_period_microseconds",
                     "type": "uint64"
                 }
             ]
@@ -36,10 +54,48 @@
         {
             "name": "testreset",
             "base": "",
-            "fields": []
+            "fields": [
+                {
+                    "name": "scope",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "vest",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "matures_at",
+                    "type": "time_point"
+                },
+                {
+                    "name": "quantity",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "withdraw",
+            "base": "",
+            "fields": [
+                {
+                    "name": "to",
+                    "type": "name"
+                }
+            ]
         }
     ],
     "actions": [
+        {
+            "name": "changevest",
+            "type": "changevest",
+            "ricardian_contract": ""
+        },
         {
             "name": "setconfig",
             "type": "setconfig",
@@ -49,12 +105,24 @@
             "name": "testreset",
             "type": "testreset",
             "ricardian_contract": ""
+        },
+        {
+            "name": "withdraw",
+            "type": "withdraw",
+            "ricardian_contract": ""
         }
     ],
     "tables": [
         {
             "name": "config",
             "type": "config",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "vests",
+            "type": "vest",
             "index_type": "i64",
             "key_names": [],
             "key_types": []

@@ -39,8 +39,8 @@ function getKeys() {
     const keys = mapValues(
         {
             [CONTRACT_ACCOUNT]: contractPrivate,
-            test1: ecc.seedPrivate(`test1`),
-            test2: ecc.seedPrivate(`test1`),
+            testvest1: ecc.seedPrivate(`testvest1`),
+            testvest2: ecc.seedPrivate(`testvest2`),
         },
         privateKey => [privateKey, ecc.privateToPublic(privateKey)],
     )
