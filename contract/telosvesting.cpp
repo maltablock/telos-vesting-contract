@@ -32,7 +32,7 @@ void telosvesting::on_transfer(name from, name to, asset quantity,
   config c = get_config();
   vests_t vests(get_self(), vest_to.value);
   // _self must pay during notify
-  vests.emplace(get_self(), [&](vest &v) {
+  vests.emplace(get_self(), [&](vest& v) {
     v.id = vests.available_primary_key();
     v.quantity = quantity;
     v.matures_at = current_time_point() + c.default_vesting_period;
@@ -56,20 +56,22 @@ void telosvesting::withdraw(eosio::name to) {
       .send();
 }
 
-void telosvesting::changevest(eosio::name to, uint64_t vest_id, uint64_t new_matures_at_unix_timestamp) {
+void telosvesting::changevest(eosio::name to, uint64_t vest_id,
+                              uint64_t new_matures_at_unix_timestamp) {
   require_auth(get_self());
   vests_t vests(get_self(), to.value);
   auto it = vests.find(vest_id);
   check(it != vests.end(), "vesting does not exist");
-  
-  time_point new_matures_at = time_point(microseconds(new_matures_at_unix_timestamp * 1e6));
-  check(new_matures_at > current_time_point() - days(1), "cannot set vesting end date so far into the past");
-  
-  vests.modify( it, same_payer, [&]( auto& v ) {
-    v.matures_at = new_matures_at;
-  });
+
+  time_point new_matures_at =
+      time_point(microseconds(new_matures_at_unix_timestamp * 1e6));
+  check(new_matures_at > current_time_point() - days(1),
+        "cannot set vesting end date so far into the past");
+
+  vests.modify(it, same_payer, [&](auto& v) { v.matures_at = new_matures_at; });
 }
 
+#ifdef TEST
 void telosvesting::testreset(eosio::name scope) {
   require_auth(_self);
   vests_t vests(get_self(), scope.value);
@@ -79,3 +81,4 @@ void telosvesting::testreset(eosio::name scope) {
     itr = vests.erase(itr);
   }
 }
+#endif

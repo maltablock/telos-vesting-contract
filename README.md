@@ -1,32 +1,53 @@
+# Telos-Vesting
+
+An EOS/Telos vesting contract where tokens can be transfered to other accounts who can then only withdraw the tokens after a specified amount.
+
+## Actions:
+
+* `on_transfer`: Requires the account receiving the tokens as memo
+* `changevest`: Allows changing the vesting end date
+* `setconfig`: Allows changing the default configuration including default vesting period
+* `withdraw`: Allows withdrawing the funds if vesting period is over
+
 # Setup
+
+Bootstrapped with [generator-eos](https://github.com/MrToph/generator-eos)
+
+TL;DR:
+
+```bash
+cd build
+cmake ../contract
+cd ..
+# set HTTP endpoint in .development.env
+npm run init # creates initial accounts for contract + testing
+npm run compile # compiles contract
+npm run deploy # sets contract code and abi configured through .development.env
+npm test
+```
 
 ## eosio-cpp
 
-Requires `eosio-cpp (>=v1.3.2)` to be installed from the [eosio.cdt](https://github.com/EOSIO/eosio.cdt) package to compile the smart contract.
+Requires `eosio-cpp (>=v1.6.1)` to be installed from the [eosio.cdt](https://github.com/EOSIO/eosio.cdt) package to compile the smart contract.
 Also needs `cmake` for compiling the smart contract.
 
 (MacOS: `brew install cmake`)
 
 ## Local Blockchain setup
 
-Run any EOS version with nodeos on docker:
+Run any EOS version with nodeos.
 
-```
-docker run --name eosio \
-    --publish 7777:7777 \
-    --publish 127.0.0.1:5555:5555 \
-    --volume /Users/cmichel/Code/contracts:/Users/cmichel/Code/contracts \
-    --detach \
-    eosio/eos:latest \
-    /bin/bash -c \
-    "keosd --http-server-address=0.0.0.0:5555 & exec nodeos -e -p eosio --plugin eosio::producer_plugin --plugin eosio::chain_api_plugin --plugin eosio::history_plugin --plugin eosio::history_api_plugin --plugin eosio::http_plugin -d /mnt/dev/data --config-dir /mnt/dev/config --http-server-address=0.0.0.0:7777 --access-control-allow-origin=* --contracts-console --verbose-http-errors --http-validate-host=false --filter-on='*'"
-```
+Change the EOS http endpoint in `.development.env` to your one (here `http://127.0.0.1:7777`).
 
-Change the EOS http endpoint in `.development.env` to ` --http-server-address=` from the docker command (here `http://127.0.0.1:7777`).
-Then deploy the `eosio.token` contract and do other initialization steps by running:
+When starting from an empty blockchain, one must first deploy the `eosio.token` contract and do other initialization steps by running:
 
 ```bash
 npm run init_blockchain # deploys eosio.token
+```
+
+To create necessary accounts for the contract and testing, run:
+
+```bash
 npm run init # creates accounts
 ```
 
@@ -43,35 +64,12 @@ Now you can run `npm run compile` which will run `make` to create the `.wasm` an
 
 ## Deployment
 
-Fill out the missing private key in `.testnet.env`, `.production.env`.
-
-There's a `npm run init` script that _sets up your contract account_ and test accounts by creating them and transferring them enough EOS + RAM/NET/CPU.
-
-> This should only be run on your local network to create accounts!
-
-To deploy to the network specified in `.<environment>.env`, run:
-
 ```
-NODE_ENV=testnet npm run deploy
+npm run deploy
 ```
-
 
 ## Testing the smart contract
 
-You can run the following scripts to **automatically create scripts for your actions** defined in the ABI file.
-
 ```
-npm run create_actions
-```
-
-You can then invoke these scripts to push actions to your deployed smart contract **without using cleos**:
-
-```
-npm run action -- <actionName>
-```
-
-Inspecting the contract's table can be done by:
-
-```
-npm run table -- <tableName>
+npm test
 ```

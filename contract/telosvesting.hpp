@@ -7,6 +7,9 @@
 #define EOS_SYMBOL symbol("EOS", 4)
 #define TLOS_SYMBOL symbol("TLOS", 4)
 
+// remove this when compiling for production
+#define TEST
+
 CONTRACT telosvesting : public eosio::contract {
  public:
   telosvesting(eosio::name receiver, eosio::name code,
@@ -27,7 +30,8 @@ CONTRACT telosvesting : public eosio::contract {
   };
   typedef eosio::multi_index<
       "vests"_n, vest,
-      eosio::indexed_by<"time"_n, eosio::const_mem_fun<vest, uint64_t, &vest::by_time>>>
+      eosio::indexed_by<"time"_n,
+                        eosio::const_mem_fun<vest, uint64_t, &vest::by_time>>>
       vests_t;
 
   config get_config() {
@@ -36,9 +40,12 @@ CONTRACT telosvesting : public eosio::contract {
     return c;
   }
 
+#ifdef TEST
   ACTION testreset(eosio::name scope);
+#endif
   ACTION withdraw(eosio::name to);
-  ACTION changevest(eosio::name to, uint64_t vest_id, uint64_t new_matures_at_unix_timestamp);
+  ACTION changevest(eosio::name to, uint64_t vest_id,
+                    uint64_t new_matures_at_unix_timestamp);
   ACTION setconfig(uint64_t default_vesting_period_microseconds);
   [[eosio::on_notify("eosio.token::transfer")]] void on_transfer(
       eosio::name from, eosio::name to, eosio::asset quantity,
