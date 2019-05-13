@@ -22,11 +22,11 @@ CONTRACT telosvesting : public eosio::contract {
   struct [[eosio::table("vests")]] vest {
     uint64_t id;
     // eosio::name to; // will be scope
-    eosio::time_point matures_at;
+    eosio::time_point_sec matures_at;
     eosio::asset quantity;
 
     auto primary_key() const { return id; }
-    uint64_t by_time() const { return matures_at.time_since_epoch().count(); }
+    uint64_t by_time() const { return matures_at.sec_since_epoch(); }
   };
   typedef eosio::multi_index<
       "vests"_n, vest,
@@ -45,8 +45,8 @@ CONTRACT telosvesting : public eosio::contract {
 #endif
   ACTION withdraw(eosio::name to);
   ACTION changevest(eosio::name to, uint64_t vest_id,
-                    uint64_t new_matures_at_unix_timestamp);
-  ACTION setconfig(uint64_t default_vesting_period_microseconds);
+                    eosio::time_point_sec new_matures_at);
+  ACTION setconfig(uint64_t default_vesting_period_seconds);
   [[eosio::on_notify("eosio.token::transfer")]] void on_transfer(
       eosio::name from, eosio::name to, eosio::asset quantity,
       std::string memo);

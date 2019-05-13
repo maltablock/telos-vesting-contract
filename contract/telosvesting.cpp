@@ -3,10 +3,10 @@
 using namespace eosio;
 using namespace std;
 
-void telosvesting::setconfig(uint64_t default_vesting_period_microseconds) {
+void telosvesting::setconfig(uint64_t default_vesting_period_seconds) {
   require_auth(get_self());
   cfg.set(config{.default_vesting_period =
-                     microseconds(default_vesting_period_microseconds)},
+                     seconds(default_vesting_period_seconds)},
           get_self());
 }
 
@@ -47,7 +47,7 @@ void telosvesting::withdraw(eosio::name to) {
   auto it = time_index.lower_bound(0);
   check(it != time_index.end(), "no vestings found");
   auto now = current_time_point();
-  check(it->matures_at < now, "no vestings found");
+  check(it->matures_at < now, "no matured vestings found");
 
   action(permission_level{get_self(), "active"_n}, "eosio.token"_n,
          "transfer"_n,
@@ -57,14 +57,12 @@ void telosvesting::withdraw(eosio::name to) {
 }
 
 void telosvesting::changevest(eosio::name to, uint64_t vest_id,
-                              uint64_t new_matures_at_unix_timestamp) {
+                              time_point_sec new_matures_at) {
   require_auth(get_self());
   vests_t vests(get_self(), to.value);
   auto it = vests.find(vest_id);
   check(it != vests.end(), "vesting does not exist");
 
-  time_point new_matures_at =
-      time_point(microseconds(new_matures_at_unix_timestamp * 1e6));
   check(new_matures_at > current_time_point() - days(1),
         "cannot set vesting end date so far into the past");
 
