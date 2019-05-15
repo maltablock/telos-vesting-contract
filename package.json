@@ -1,7 +1,7 @@
 {
   "name": "telos-vesting",
-  "version": "0.0.0-semantically-released",
-  "description": "",
+  "version": "1.0.0",
+  "description": "A Telos/EOS vesting contract where tokens can be transfered to other accounts who can then only withdraw them after a specified amount of time has passed.",
   "scripts": {
     "test": "jest --runInBand",
     "compile": "make -C build",
@@ -13,7 +13,7 @@
     "action": "node scripts/action.js",
     "table": "node scripts/table.js"
   },
-  "author": "MrToph",
+  "author": "AirdropsDAC",
   "license": "MIT",
   "eslintConfig": {
     "extends": [

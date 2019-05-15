@@ -1,6 +1,6 @@
 # Telos-Vesting
 
-An EOS/Telos vesting contract where tokens can be transfered to other accounts who can then only withdraw the tokens after a specified amount.
+A Telos/EOS vesting contract where tokens can be transfered to other accounts who can then only withdraw them after a specified amount of time has passed.
 
 ## Actions:
 
@@ -9,7 +9,13 @@ An EOS/Telos vesting contract where tokens can be transfered to other accounts w
 * `setconfig`: Allows changing the default configuration including default vesting period
 * `withdraw`: Allows withdrawing the funds if vesting period is over
 
-# Setup
+## Examples
+
+```bash
+
+```
+
+# Development
 
 Bootstrapped with [generator-eos](https://github.com/MrToph/generator-eos)
 
@@ -73,3 +79,9 @@ npm run deploy
 ```
 npm test
 ```
+
+# License
+
+MIT Copyright (c) 2019 AirdropsDAC
+
+Disclaimer: AirdropsDAC makes its contribution on a voluntary basis as a member of the EOSIO community under MIT license and is not responsible for ensuring the overall performance of the software or any related applications. We make no representation, warranty, guarantee or undertaking in respect of the releases described here, the related GitHub release, or any related documentation, whether expressed or implied, including but not limited to the warranties or merchantability, fitness for a particular purpose and noninfringement. In no event shall we be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or documentation or the use or other dealings in the software or documentation. Any reference to any third party or third-party product, resource or service is not an endorsement or recommendation by AirdropsDAC. We are not responsible, and disclaim any and all responsibility and liability, for your use of or reliance on any of these resources. Third-party resources may be updated, changed or terminated at any time, so the information here may be out of date or inaccurate.
