@@ -16,8 +16,8 @@
                     "type": "uint64"
                 },
                 {
-                    "name": "new_matures_at_unix_timestamp",
-                    "type": "uint64"
+                    "name": "new_matures_at",
+                    "type": "time_point_sec"
                 }
             ]
         },
@@ -46,7 +46,7 @@
             "base": "",
             "fields": [
                 {
-                    "name": "default_vesting_period_microseconds",
+                    "name": "default_vesting_period_seconds",
                     "type": "uint64"
                 }
             ]
@@ -71,7 +71,7 @@
                 },
                 {
                     "name": "matures_at",
-                    "type": "time_point"
+                    "type": "time_point_sec"
                 },
                 {
                     "name": "quantity",

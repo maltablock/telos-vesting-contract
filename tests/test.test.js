@@ -34,7 +34,7 @@ const getLastVestingEntry = async account =>
         .then(result => result.rows.pop())
 
 describe(`contract`, () => {
-    const newVestingPeriod = 5 * 24 * 60 * 60 * 1e6
+    const newVestingPeriod = 5 * 24 * 60 * 60
 
     beforeAll(async () => {
         await sendTransaction({
@@ -51,12 +51,12 @@ describe(`contract`, () => {
         await sendTransaction({
             name: `setconfig`,
             data: {
-                default_vesting_period_microseconds: newVestingPeriod,
+                default_vesting_period_seconds: newVestingPeriod,
             },
         })
 
         const config = await getConfig()
-        expect(Number.parseInt(config.default_vesting_period._count, 10)).toEqual(newVestingPeriod)
+        expect(Number.parseInt(config.default_vesting_period._count, 10)).toEqual(newVestingPeriod * 1e6)
     })
 
     test(`transfer`, async () => {
@@ -76,7 +76,7 @@ describe(`contract`, () => {
 
         const vest = await getLastVestingEntry(`testvest2`)
         expect(vest).toMatchObject({ quantity })
-        const expectedMaturesAt = new Date(Date.now() + newVestingPeriod / 1000)
+        const expectedMaturesAt = new Date(Date.now() + newVestingPeriod * 1000)
         const maturesAt = new Date(vest.matures_at)
         expect(maturesAt.toDateString()).toMatch(expectedMaturesAt.toDateString())
     })
@@ -99,13 +99,14 @@ describe(`contract`, () => {
         expect(failed).toBe(true)
 
         const vest = await getLastVestingEntry(`testvest2`)
+        const newMaturesAt = new Date(Math.floor(Date.now() - 10 * 1e3)) // 10 seconds in past
         await sendTransaction({
             name: `changevest`,
             actor: CONTRACT_ACCOUNT,
             data: {
                 to: `testvest2`,
                 vest_id: vest.id,
-                new_matures_at_unix_timestamp: Math.floor(Date.now() / 1e3 - 10), // 10 seconds in past
+                new_matures_at: newMaturesAt.toDateString(),
             },
         })
 
