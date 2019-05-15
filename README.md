@@ -12,7 +12,16 @@ A Telos/EOS vesting contract where tokens can be transfered to other accounts wh
 ## Examples
 
 ```bash
+# vest to account specified in memo
+cleos push action eosio.token transfer '[ "fromaccnt", "vestingctrct", "10.0000 TLOS", "vesttoaccnt" ]' -p fromaccnt@active
+# withdraw
+cleos push action vestingctrct withdraw '[ "vesttoaccnt" ]' -p vesttoaccnt@active
 
+# owner actions
+# change default vesting period to 5 days (5 * 24 * 60 * 60 seconds)
+cleos push action vestingctrct setconfig '[ "432000" ]' -p vestingctrct@active
+# changes vesting end date for specific one
+cleos push action vestingctrct changevest '[ "vesttoaccnt", "0", "2019-05-15T12:39:21" ]' -p vestingctrct@active
 ```
 
 # Development

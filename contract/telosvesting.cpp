@@ -73,7 +73,7 @@ void telosvesting::changevest(eosio::name to, uint64_t vest_id,
 
 #ifdef TEST
 void telosvesting::testreset(eosio::name scope) {
-  require_auth(_self);
+  require_auth(get_self());
   vests_t vests(get_self(), scope.value);
 
   auto itr = vests.begin();
