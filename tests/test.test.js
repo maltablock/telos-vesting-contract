@@ -56,7 +56,9 @@ describe(`contract`, () => {
         })
 
         const config = await getConfig()
-        expect(Number.parseInt(config.default_vesting_period._count, 10)).toEqual(newVestingPeriod * 1e6)
+        expect(Number.parseInt(config.default_vesting_period._count, 10)).toEqual(
+            newVestingPeriod * 1e6,
+        )
     })
 
     test(`transfer`, async () => {
@@ -82,7 +84,7 @@ describe(`contract`, () => {
     })
 
     test(`withdraw + changevest`, async () => {
-        expect.assertions(2)
+        expect.assertions(3)
 
         let failed = false
         try {
@@ -110,14 +112,35 @@ describe(`contract`, () => {
             },
         })
 
-        await sendTransaction({
-            name: `withdraw`,
-            actor: `testvest2`,
-            data: {
-                to: `testvest2`,
-            },
-        })
+        failed = false
+        try {
+            await sendTransaction({
+                name: `withdraw`,
+                actor: `testvest2`,
+                data: {
+                    to: `testvest2`,
+                },
+            })
+        } catch (error) {
+            failed = true
+        }
 
-        expect(true).toBe(true)
+        expect(failed).toBe(false)
+
+        // cannot withdraw again
+        failed = false
+        try {
+            await sendTransaction({
+                name: `withdraw`,
+                actor: `testvest2`,
+                data: {
+                    to: `testvest2`,
+                },
+            })
+        } catch (error) {
+            failed = true
+        }
+
+        expect(failed).toBe(true)
     })
 })

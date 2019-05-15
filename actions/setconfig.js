@@ -8,7 +8,7 @@ async function action() {
             name: `setconfig`,
             actor: CONTRACT_ACCOUNT,
             data: {
-                default_vesting_period_microseconds: 10 * 24 * 60 * 60 * 1E6,
+                default_vesting_period_seconds: 5 * 24 * 60 * 60,
             },
         })
         console.log(`SUCCESS`)

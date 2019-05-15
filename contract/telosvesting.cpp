@@ -54,6 +54,8 @@ void telosvesting::withdraw(eosio::name to) {
          make_tuple(get_self(), to, it->quantity,
                     std::string("Withdraw from vesting contract")))
       .send();
+
+  time_index.erase(it);
 }
 
 void telosvesting::changevest(eosio::name to, uint64_t vest_id,
